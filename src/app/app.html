@@ -1,0 +1,257 @@
+<div class="christmas-container" [class.lights-on]="lightsOn">
+  <!-- Falling Snow -->
+  <div class="snow-container">
+    @for (flake of snowflakes; track flake.id) {
+      <div
+        class="snowflake"
+        [style.left.%]="flake.left"
+        [style.animation-duration.s]="flake.duration"
+        [style.animation-delay.s]="flake.delay"
+        [style.font-size.px]="flake.size">
+        {{ flake.symbol }}
+      </div>
+    }
+  </div>
+
+  <!-- Twinkling Stars -->
+  <div class="stars-container">
+    @for (star of stars; track star.id) {
+      <div
+        class="star"
+        [style.left.%]="star.left"
+        [style.top.%]="star.top"
+        [style.animation-delay.s]="star.delay">
+      </div>
+    }
+  </div>
+
+  <!-- Santa Flying Animation -->
+  <div class="santa-container" [class.flying]="santaFlying">
+    <div class="santa-sleigh">
+      <span class="reindeer">🦌🦌🦌</span>
+      <span class="sleigh">🛷</span>
+      <span class="santa">🎅</span>
+    </div>
+    <div class="ho-ho-ho" [class.show]="showHoHoHo">HO HO HO!</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Header with animated title -->
+    <header class="christmas-header">
+      <div class="ornament left bounce">🎄</div>
+      <h1 class="main-title">
+        @for (letter of titleLetters; track $index) {
+          <span class="letter" [style.animation-delay.ms]="$index * 100">
+            {{ letter }}
+          </span>
+        }
+      </h1>
+      <div class="ornament right bounce">🎄</div>
+    </header>
+
+    <!-- Christmas Tree Section -->
+    <section class="tree-section">
+      <div class="christmas-tree-container" (click)="onTreeClick()">
+        <div class="tree-star">⭐</div>
+        <div class="christmas-tree">
+          <div class="tree-layer layer-1"></div>
+          <div class="tree-layer layer-2"></div>
+          <div class="tree-layer layer-3"></div>
+          <div class="tree-ornaments">
+            @for (light of treeLights; track light.id) {
+              <span
+                class="tree-ornament"
+                [class.lit]="lightsOn"
+                [style.left.%]="light.left"
+                [style.top.%]="light.top"
+                [style.animation-delay.s]="light.delay"
+                [style.background]="light.color">
+              </span>
+            }
+          </div>
+        </div>
+        <div class="tree-trunk"></div>
+        <div class="presents">
+          <span class="present bounce-1">🎁</span>
+          <span class="present bounce-2">🎀</span>
+          <span class="present bounce-3">🎁</span>
+        </div>
+
+        <!-- Cute Hamster -->
+        <div class="hamster-container" [class.show]="hamsterVisible">
+          <div class="hamster">
+            <div class="hamster-body">🐹</div>
+            <div class="hamster-hat">🎅</div>
+          </div>
+          <div class="hamster-speech">
+            <span class="speech-text">Happy New Year!</span>
+            <span class="speech-hearts">✨🎉✨</span>
+          </div>
+        </div>
+      </div>
+      <p class="tree-hint">(Click the tree for a surprise!)</p>
+    </section>
+
+    <!-- Personalized Message -->
+    <section class="message-section">
+      <div class="message-card" [class.flipped]="cardFlipped" (click)="flipCard()">
+        <div class="card-front">
+          <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body">
+              <span class="envelope-heart">💝</span>
+              <p>Click to open your gift!</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="message-content">
+            <h2>Dear Special One,</h2>
+            <p class="message-text">
+              May this Christmas bring you endless joy, warm hugs,
+              and all the happiness your heart can hold!
+            </p>
+            <p class="message-text">
+              You make every day feel like Christmas with your
+              beautiful smile and kind heart.
+            </p>
+            <p class="signature">With all my love,<br>Your Secret Santa 🎅</p>
+            <div class="hearts">
+              <span>❤️</span><span>💚</span><span>❤️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funny Section -->
+    <section class="funny-section">
+      <h2 class="section-title">🎄 Christmas Joke Generator 🎄</h2>
+      <div class="joke-box">
+        <div class="joke-content">
+          <p class="joke-text">{{ currentJoke.setup }}</p>
+          @if (showPunchline) {
+            <p class="punchline">{{ currentJoke.punchline }}</p>
+          }
+        </div>
+        <button class="joke-button" (click)="tellJoke()">
+          {{ showPunchline ? '🎅 Another Joke!' : '😂 Tell me!' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- Interactive Section -->
+    <section class="interactive-section">
+      <h2 class="section-title">🦌 Make Rudolph's Nose Glow! 🦌</h2>
+      <div class="rudolph-container">
+        <div class="rudolph" (click)="toggleRudolph()">
+          <div class="rudolph-face">🦌</div>
+          <div class="rudolph-nose" [class.glowing]="rudolphGlowing">🔴</div>
+        </div>
+        @if (rudolphGlowing) {
+          <div class="rudolph-message">
+            {{ rudolphMessage }}
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Countdown or Greeting -->
+    <section class="countdown-section">
+      @if (isChristmas) {
+        <div class="christmas-greeting">
+          <h2>🎄 MERRY CHRISTMAS! 🎄</h2>
+          <div class="celebration">🎉🎊🎁🎄🎅🦌🎉🎊</div>
+        </div>
+      } @else {
+        <div class="countdown">
+          <h2>Countdown to Christmas</h2>
+          <div class="countdown-numbers">
+            <div class="countdown-item">
+              <span class="number">{{ daysUntilChristmas }}</span>
+              <span class="label">Days</span>
+            </div>
+            <div class="countdown-item">
+              <span class="number">{{ hoursUntilChristmas }}</span>
+              <span class="label">Hours</span>
+            </div>
+            <div class="countdown-item">
+              <span class="number">{{ minutesUntilChristmas }}</span>
+              <span class="label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+              <span class="number">{{ secondsUntilChristmas }}</span>
+              <span class="label">Seconds</span>
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Cookie Catcher Game -->
+    <section class="game-section">
+      <h2 class="section-title">🍪 Catch the Cookies! 🍪</h2>
+      <p class="game-score">Score: {{ cookieScore }}</p>
+      <div class="game-area">
+        @for (cookie of fallingCookies; track cookie.id) {
+          <span
+            class="falling-cookie"
+            [style.left.%]="cookie.left"
+            [style.top.%]="cookie.top"
+            (click)="catchCookie(cookie)">
+            🍪
+          </span>
+        }
+      </div>
+      <button class="game-button" (click)="startCookieGame()" [disabled]="gameActive">
+        {{ gameActive ? 'Playing...' : 'Start Game!' }}
+      </button>
+    </section>
+
+    <!-- Dancing Elves -->
+    <section class="elves-section">
+      <h2 class="section-title">🎄 Dancing Elves 🎄</h2>
+      <div class="elves-container">
+        <div class="elf elf-1">🧝</div>
+        <div class="elf elf-2">🧝‍♂️</div>
+        <div class="elf elf-3">🧝‍♀️</div>
+        <div class="elf elf-4">🧝</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="christmas-footer">
+      <div class="footer-decorations">
+        <span>🎄</span><span>⭐</span><span>🎁</span><span>🦌</span><span>🎅</span><span>❄️</span><span>🎄</span>
+      </div>
+      <p class="footer-message">Made with ❤️ and Christmas Spirit</p>
+      <p class="footer-year">Christmas {{ currentYear }}</p>
+    </footer>
+  </div>
+
+  <!-- Music Player -->
+  <div class="music-player" [class.playing]="musicPlaying">
+    <button class="music-toggle" (click)="toggleMusic()">
+      <span class="music-icon">{{ musicPlaying ? '🔊' : '🔇' }}</span>
+      <span class="music-label">{{ musicPlaying ? 'Pause Music' : 'Play Music' }}</span>
+    </button>
+  </div>
+
+  <audio #audioPlayer loop>
+    <source src="assets/audio/jingle-bells.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Floating emojis -->
+  <div class="floating-emojis">
+    @for (emoji of floatingEmojis; track emoji.id) {
+      <span
+        class="floating-emoji"
+        [style.left.%]="emoji.left"
+        [style.animation-duration.s]="emoji.duration"
+        [style.animation-delay.s]="emoji.delay">
+        {{ emoji.symbol }}
+      </span>
+    }
+  </div>
+</div>
